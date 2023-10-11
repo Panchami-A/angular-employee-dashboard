@@ -26,6 +26,7 @@
           class="add-employee__button"
           data-toggle="modal"
           data-target="#exampleModal"
+          (click)="sidebarShow = !sidebarShow"
           #addEmployeeButton
         >
           Add Employee
@@ -33,12 +34,14 @@
         <li
           type="button"
           class="download-details__button"
+          (click)="sidebarShow = !sidebarShow"
         >
           Download Records (PDF Format)
         </li>
         <li
           type="button"
           class="download-details__button"
+          (click)="sidebarShow = !sidebarShow"
         >
           Download Records (Excel Format)
         </li>
@@ -49,7 +52,7 @@
 
 <!-- Employee Details -->
 <main class="main">
-  <div *ngIf="employees.length === 0">There are No Employees Added!</div>
+  <div class="main__no-employees-text" *ngIf="employees.length === 0">There are No Employees Added!</div>
   <div *ngFor="let emp of employeesToDisplay">
     <app-employee
       [employee]="emp"

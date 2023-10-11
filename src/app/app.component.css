@@ -6,6 +6,12 @@ main {
   border: 1px solid transparent;
 }
 
+.main__no-employees-text {
+  text-align: center;
+  font-size: 20px;
+  margin: 10%;
+}
+
 .toolbar {
   height: 4rem;
   display: flex;

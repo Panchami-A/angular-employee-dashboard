@@ -128,7 +128,7 @@ export class AppComponent implements OnInit {
           this.clearForm();
         });
       } else {
-        alert("Please Provide all the details");
+        alert("Please provide all the details");
       }
       this.sidebarShow = false;
     } else {
