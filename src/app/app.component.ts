@@ -174,6 +174,7 @@ export class AppComponent implements OnInit {
 
   clearForm() {
     this.actionButton = "Insert";
+    this.editData = false;
     this.FirstName.setValue("");
     this.LastName.setValue("");
     this.BirthDay.setValue("");
