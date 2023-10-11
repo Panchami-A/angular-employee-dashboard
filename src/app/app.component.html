@@ -1,0 +1,192 @@
+<style></style>
+
+<div class="toolbar">
+  <div class="sidebar-opener">
+    <i
+      class="fa fa-bars fa-lg sidebar-opener__icon"
+      (click)="sidebarShow = !sidebarShow"
+    ></i>
+    <h2 class="sidebar-opener__text">Welcome !</h2>
+  </div>
+  <div class="search-employee">
+    <input
+      type="search"
+      class="search-employee__input"
+      placeholder="Search Employee"
+      (input) = "searchEmployees(searchInput.value)"
+      #searchInput
+    />
+  </div>
+  <div class="sidebar-slider" [class.sidebar-slide-in]="sidebarShow" #sideBar>
+    <div class="sidebar-close" (click)="sidebarShow = !sidebarShow">X</div>
+    <div class="sidebar-content">
+      <ul>
+        <li
+          type="button"
+          class="add-employee__button"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          #addEmployeeButton
+        >
+          Add Employee
+        </li>
+        <li
+          type="button"
+          class="download-details__button"
+        >
+          Download Records (PDF Format)
+        </li>
+        <li
+          type="button"
+          class="download-details__button"
+        >
+          Download Records (Excel Format)
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Employee Details -->
+<main class="main">
+  <div *ngIf="employees.length === 0">There are No Employees Added!</div>
+  <div *ngFor="let emp of employeesToDisplay">
+    <app-employee
+      [employee]="emp"
+      (onRemoveEmployee)="removeEmployee($event)"
+      (onEditEmployee)="editEmployee($event)"
+    ></app-employee>
+  </div>
+</main>
+
+<!-- Modal To Enter the Employee Information -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-backdrop="static"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Enter Employee Information
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal()"
+        >
+          X
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="employeeForm">
+          <div class="modal-body__personal-info">
+            <h6 class="modal-body__personal-info__text">
+              Personal Information
+            </h6>
+          </div>
+          <div class="modal-body__name">
+            <div class="modal-body__name__first-name">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="First Name"
+                formControlName="firstname"
+              />
+            </div>
+            <div class="modal-body__name__last-name">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Last Name"
+                formControlName="lastname"
+              />
+            </div>
+          </div>
+          <div class="modal-body__personal-info__details">
+            <div class="modal-body__personal-info__details__datepicker">
+              <label for="datepicker" class="form-label">Birthdate</label>
+              <input
+                type="date"
+                class="form-control"
+                id="datepicker"
+                formControlName="birthday"
+              />
+            </div>
+            <div class="modal-body__personal-info__details__gender">
+              <h6>Gender</h6>
+
+              <div class="modal-body__personal-info__details__gender__checkbox">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="male"
+                    value="m"
+                    formControlName="gender"
+                  />
+                  <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="female"
+                    value="f"
+                    formControlName="gender"
+                  />
+                  <label class="form-check-label" for="female">Female</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-body__eduction">
+            <label for="education" class="form-label">Education</label>
+            <select
+              class="form-control modal-body__eduction__select"
+              formControlName="education"
+            >
+              <option value="default" selected>Enter your Education</option>
+              <option
+                *ngFor="let option of educationOptions; let i = index"
+                value="{{ i }}"
+              >
+                {{ option | titlecase }}
+              </option>
+            </select>
+          </div>
+          <div class="modal-body__profile-image">
+            <label for="profile" class="form-label">Profile Image</label>
+            <input
+              type="file"
+              class="form-control modal-body__profile-image__input"
+              id="profile"
+              #fileInput
+              formControlName="profile"
+              (change)="onselectFile($event)"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="addEmployee()"
+        >
+          {{ actionButton }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

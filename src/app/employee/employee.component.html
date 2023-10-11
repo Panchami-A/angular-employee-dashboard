@@ -1,0 +1,50 @@
+<section>
+  <div class="employee-details">
+    <div class="employee-details__profile">
+      <img
+        class="employee-details__profile__image"
+        src="{{ employee.profile }}"
+        alt="Profile Image"
+      />
+    </div>
+    <div class="employee-details__info">
+      <div class="employee-details__info__header">
+        <div class="employee-details__info__header__name">
+          {{ employee.firstname | titlecase }} 
+          {{ employee.lastname | titlecase }}
+        </div>
+        <div class="employee-details__info__header__buttons">
+          <button class="employee-details__info__header__buttons__edit" (click)="editEmployeeClicked()">
+            Edit
+          </button>
+          <button (click)="deleteEmployeeClicked()" class="employee-details__info__header__buttons__delete">
+            Delete
+          </button>
+        </div>
+      </div>
+      <div class="employee-details__info__personal-info">
+        <table class="employee-details__info__personal-info__table">
+          <thead class="employee-details__info__personal-info__table__head">
+            <tr>
+              <td>Personal Details</td>
+            </tr>
+          </thead>
+          <tbody class="employee-details__info__personal-info__table__body">
+            <tr>
+              <td>Birthdate</td>
+              <td>{{ employee.birthdate }}</td>
+            </tr>
+            <tr>
+              <td>Gender</td>
+              <td>{{ employee.gender === "m" ? "Male" : "Female" }}</td>
+            </tr>
+            <tr>
+              <td>Education</td>
+              <td>{{ employee.education | titlecase }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
