@@ -1,21 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
   FormGroup,
   Validators,
-} from '@angular/forms';
-import { Employee } from './model/employee.model';
-import { EmployeeService } from './services/employee.service';
+} from "@angular/forms";
+import { Employee } from "./model/employee.model";
+import { EmployeeService } from "./services/employee.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
 })
 export class AppComponent implements OnInit {
-  @ViewChild('fileInput') fileInput: any;
-  @ViewChild('addEmployeeButton') addEmployeeButton: any;
+  @ViewChild("fileInput") fileInput: any;
+  @ViewChild("addEmployeeButton") addEmployeeButton: any;
   public sidebarShow: boolean = false;
   employees: Employee[];
   employeesToDisplay: Employee[];
@@ -24,44 +24,44 @@ export class AppComponent implements OnInit {
   editData: Boolean = false;
   empId: number | undefined;
   outdatedEmployeeDetail: Employee;
-  imageUrl = '';
+  imageUrl = "";
 
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService
   ) {
-    this.actionButton = 'Insert';
+    this.actionButton = "Insert";
     this.employeeForm = fb.group({});
     this.employees = [];
     this.employeesToDisplay = [];
     this.outdatedEmployeeDetail = {
-      firstname: '',
-      lastname: '',
-      birthdate: '',
-      gender: '',
-      education: '',
-      profile: '',
+      firstname: "",
+      lastname: "",
+      birthdate: "",
+      gender: "",
+      education: "",
+      profile: "",
     };
   }
 
   educationOptions = [
-    '10th pass',
-    'diploma',
-    'graduate',
-    'post graduate',
-    'PhD',
+    "10th pass",
+    "diploma",
+    "graduate",
+    "post graduate",
+    "PhD",
   ];
 
   ngOnInit(): void {
-    this.actionButton = 'Insert';
+    this.actionButton = "Insert";
     this.editData = false;
     this.employeeForm = this.fb.group({
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
-      birthday: ['', Validators.required],
-      gender: ['m', Validators.required],
-      education: ['default', Validators.required],
-      profile: ['', Validators.required],
+      firstname: ["", Validators.required],
+      lastname: ["", Validators.required],
+      birthday: ["", Validators.required],
+      gender: ["m", Validators.required],
+      education: ["default", Validators.required],
+      profile: ["", Validators.required],
     });
 
     this.employeeService.getEmployees().subscribe((res) => {
@@ -100,12 +100,14 @@ export class AppComponent implements OnInit {
       this.employeeService
         .putProduct(
           updatedEmployeeDetail,
-          this.outdatedEmployeeDetail.id?.toString() ?? '0'
+          this.outdatedEmployeeDetail.id?.toString() ?? "0"
         )
         .subscribe((res) => {
           let index = this.employees.indexOf(this.outdatedEmployeeDetail);
           this.employees[index] = res as Employee;
         });
+    } else {
+      alert("Please provide all the details");
     }
     this.clearForm();
   }
@@ -125,6 +127,8 @@ export class AppComponent implements OnInit {
           this.employees.unshift(res);
           this.clearForm();
         });
+      } else {
+        alert("Please Provide all the details");
       }
       this.sidebarShow = false;
     } else {
@@ -143,7 +147,7 @@ export class AppComponent implements OnInit {
   }
 
   setForm(emp: Employee) {
-    this.actionButton = 'Edit';
+    this.actionButton = "Edit";
     this.FirstName.setValue(emp.firstname);
     this.LastName.setValue(emp.lastname);
     this.BirthDay.setValue(emp.birthdate);
@@ -154,7 +158,7 @@ export class AppComponent implements OnInit {
       if (val === emp.education) educationIndex = index;
     });
     this.Education.setValue(educationIndex);
-    this.fileInput.nativeElement.value = '';
+    this.fileInput.nativeElement.value = "";
   }
 
   editEmployee(event: any) {
@@ -169,23 +173,23 @@ export class AppComponent implements OnInit {
   }
 
   clearForm() {
-    this.actionButton = 'Insert';
-    this.FirstName.setValue('');
-    this.LastName.setValue('');
-    this.BirthDay.setValue('');
-    this.Gender.setValue('');
-    this.Education.setValue('');
-    this.fileInput.nativeElement.value = '';
+    this.actionButton = "Insert";
+    this.FirstName.setValue("");
+    this.LastName.setValue("");
+    this.BirthDay.setValue("");
+    this.Gender.setValue("");
+    this.Education.setValue("");
+    this.fileInput.nativeElement.value = "";
   }
 
   searchEmployees(event: any) {
     let filteredEmployees: Employee[] = [];
-    if (event === '') {
+    if (event === "") {
       this.employeesToDisplay = this.employees;
     } else {
       filteredEmployees = this.employees.filter((val, index) => {
         let targetKey =
-          val.firstname.toLowerCase() + '' + val.lastname.toLocaleLowerCase();
+          val.firstname.toLowerCase() + "" + val.lastname.toLocaleLowerCase();
         let searchKey = event.toLowerCase();
         return targetKey.includes(searchKey);
       });
@@ -194,18 +198,18 @@ export class AppComponent implements OnInit {
   }
 
   public get FirstName(): FormControl {
-    return this.employeeForm.get('firstname') as FormControl;
+    return this.employeeForm.get("firstname") as FormControl;
   }
   public get LastName(): FormControl {
-    return this.employeeForm.get('lastname') as FormControl;
+    return this.employeeForm.get("lastname") as FormControl;
   }
   public get BirthDay(): FormControl {
-    return this.employeeForm.get('birthday') as FormControl;
+    return this.employeeForm.get("birthday") as FormControl;
   }
   public get Gender(): FormControl {
-    return this.employeeForm.get('gender') as FormControl;
+    return this.employeeForm.get("gender") as FormControl;
   }
   public get Education(): FormControl {
-    return this.employeeForm.get('education') as FormControl;
+    return this.employeeForm.get("education") as FormControl;
   }
 }
