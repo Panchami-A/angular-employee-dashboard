@@ -1,50 +1,38 @@
-.employee-details {
-  display: flex;
-  flex-direction: row;
+.employee__table__name-data {
+  width: 30%;
 }
-.employee-details__profile {
-  flex: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 10px;
+
+.employee__table__name-data {
+  width: 25%;
 }
-.employee-details__info {
-  flex: 10;
-  display: flex;
-  flex-direction: column;
+
+.employee__table__name {
+  margin-left: 20px;
 }
-.employee-details__profile__image {
-  margin-top: 50px;
-  height: 200px;
-  width: 200px;
-  border-radius: 1rem;
+
+.table thead th {
+  border: none;
 }
-.employee-details__info__header {
-  display: flex;
-  flex-direction: row;
-  flex: 2;
+
+.table th {
+  border: none;
+  background-color: #f8fafb;
 }
-.employee-details__info__header__name {
-  flex: 8;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 0px 1rem;
-  margin-top: 8px;
+
+.table tbody td {
+  padding-top: 17px;
 }
-.employee-details__info__header__buttons {
+
+.table tbody td:first-child {
+  padding-top: 10px;
+}
+
+.employee__table__buttons {
   flex: 4;
-  margin-left: 10%;
-  margin-top: 2%;
   margin-right: 1%;
 }
-.employee-details__info__header__buttons__edit {
+
+.employee__table__buttons__edit {
   margin-right: 10px;
   background-color: white;
   font-size: 17px;
@@ -52,40 +40,29 @@
   width: 100px;
   border: 1px solid transparent;
   border-color: green;
+  border-radius: 10px;
 }
-.employee-details__info__header__buttons__edit:hover {
+
+.employee__table__buttons__edit:hover {
   color: white;
   background-color: green;
   border-color: green;
+  border-radius: 10px;
 }
-.employee-details__info__header__buttons__delete {
+
+.employee__table__buttons__delete {
   background-color: white;
   font-size: 17px;
   color: red;
   width: 100px;
   border: 1px solid transparent;
   border-color: red;
+  border-radius: 10px;
 }
-.employee-details__info__header__buttons__delete:hover {
+
+.employee__table__buttons__delete:hover {
   color: white;
   background-color: red;
   border-color: red;
-}
-.employee-details__info__personal-info {
-  flex: 10;
-}
-.employee-details__info__personal-info__table {
-  width: 60%;
-  margin-top: 20px;
-  margin-left: 50px;
-}
-.employee-details__info__personal-info__table__head {
-  font-size: 25px;
-  font-weight: bold;
-  text-align: right;
-}
-.employee-details__info__personal-info__table__body {
-  border-top: 1px solid black;
-  font-size: 20px;
-  font-weight: 500;
+  border-radius: 10px;
 }

@@ -1,0 +1,45 @@
+.table-pagination {
+  border: none;
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: 5%;
+  margin-top: 3%;
+}
+
+.pagination > li > a {
+  font-size: 18px;
+  padding: 5px 13px;
+  background-color: white;
+  color: #7e28ed;
+  border: solid 1px #7e28ed !important;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination > li > a:focus,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+  color: white;
+  background-color: #a29bfe;
+  border-radius: 5px;
+  border-color: none;
+}
+
+.pagination > .active > a {
+  color: white;
+  background-color: #7e28ed !important;
+  border: solid 1px #7e28ed !important;
+  border-radius: 5px;
+}
+
+.pagination > .active > a:hover {
+  background-color: #5a4181 !important;
+  border: solid 1px #5a4181;
+  border-radius: 5px;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #a29bfe !important;
+  border-radius: 5px;
+}

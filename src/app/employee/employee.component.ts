@@ -7,26 +7,19 @@ import { Employee } from '../model/employee.model';
   styleUrls: ['./employee.component.css'],
 })
 export class EmployeeComponent implements OnInit {
-  @Input() employee: Employee;
+  @Input() employeesToDisplay: Employee[];
   @Output() onRemoveEmployee = new EventEmitter<number>();
   @Output() onEditEmployee = new EventEmitter<number>();
   constructor() {
-    this.employee = {
-      firstname: '',
-      lastname: '',
-      birthdate: '',
-      gender: '',
-      education: '',
-      profile: '',
-    };
+    this.employeesToDisplay = [];
   }
   ngOnInit(): void {
-    console.log(this.employee);
+    
   }
-  deleteEmployeeClicked() {
-    this.onRemoveEmployee.emit(this.employee.id);
+  deleteEmployeeClicked(employee: Employee) {
+    this.onRemoveEmployee.emit(employee.id);
   }
-  editEmployeeClicked() {
-    this.onEditEmployee.emit(this.employee.id);
+  editEmployeeClicked(employee: Employee) {
+    this.onEditEmployee.emit(employee.id);
   }
 }

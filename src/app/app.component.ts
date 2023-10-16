@@ -16,7 +16,6 @@ import { EmployeeService } from "./services/employee.service";
 export class AppComponent implements OnInit {
   @ViewChild("fileInput") fileInput: any;
   @ViewChild("addEmployeeButton") addEmployeeButton: any;
-  public sidebarShow: boolean = false;
   employees: Employee[];
   employeesToDisplay: Employee[];
   employeeForm: FormGroup;
@@ -25,6 +24,9 @@ export class AppComponent implements OnInit {
   empId: number | undefined;
   outdatedEmployeeDetail: Employee;
   imageUrl = "";
+  currentPage = 1;
+  itemsPerPage = 5;
+  setSearching = false;
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +70,7 @@ export class AppComponent implements OnInit {
       for (let emp of res) {
         this.employees.unshift(emp);
       }
-      this.employeesToDisplay = this.employees;
+      this.employeesToDisplay = this.employeesDisplay();
     });
   }
 
@@ -86,29 +88,29 @@ export class AppComponent implements OnInit {
     }
   }
 
-  updateProduct() {
+  updateEmployee() {
     let updatedEmployeeDetail: Employee = {
       firstname: this.FirstName.value,
       lastname: this.LastName.value,
       birthdate: this.BirthDay.value,
       gender: this.Gender.value,
       education: this.educationOptions[parseInt(this.Education.value)],
-      profile: this.imageUrl,
+      profile:
+        this.imageUrl.length > 0
+          ? this.imageUrl
+          : this.outdatedEmployeeDetail.profile,
       id: this.outdatedEmployeeDetail.id,
     };
-    if (this.employeeForm.valid) {
-      this.employeeService
-        .putProduct(
-          updatedEmployeeDetail,
-          this.outdatedEmployeeDetail.id?.toString() ?? "0"
-        )
-        .subscribe((res) => {
-          let index = this.employees.indexOf(this.outdatedEmployeeDetail);
-          this.employees[index] = res as Employee;
-        });
-    } else {
-      alert("Please provide all the details");
-    }
+    this.employeeService
+      .putProduct(
+        updatedEmployeeDetail,
+        this.outdatedEmployeeDetail.id?.toString() ?? "0"
+      )
+      .subscribe((res) => {
+        let index = this.employees.indexOf(this.outdatedEmployeeDetail);
+        this.employees[index] = res as Employee;
+        this.employeesToDisplay = this.employeesDisplay();
+      });
     this.clearForm();
   }
 
@@ -125,14 +127,14 @@ export class AppComponent implements OnInit {
         };
         this.employeeService.postEmployee(employee).subscribe((res) => {
           this.employees.unshift(res);
+          this.employeesToDisplay = this.employeesDisplay();
           this.clearForm();
         });
       } else {
         alert("Please provide all the details");
       }
-      this.sidebarShow = false;
     } else {
-      this.updateProduct();
+      this.updateEmployee();
     }
   }
 
@@ -140,7 +142,9 @@ export class AppComponent implements OnInit {
     this.employees.forEach((val, index) => {
       if (val.id === parseInt(event)) {
         this.employeeService.deleteEmployee(event).subscribe((res) => {
+          this.currentPage = 1;
           this.employees.splice(index, 1);
+          this.employeesToDisplay = this.employeesDisplay();
         });
       }
     });
@@ -159,6 +163,7 @@ export class AppComponent implements OnInit {
     });
     this.Education.setValue(educationIndex);
     this.fileInput.nativeElement.value = "";
+    this.imageUrl = "";
   }
 
   editEmployee(event: any) {
@@ -181,21 +186,46 @@ export class AppComponent implements OnInit {
     this.Gender.setValue("");
     this.Education.setValue("");
     this.fileInput.nativeElement.value = "";
+    this.setSearching = false;
   }
 
   searchEmployees(event: any) {
     let filteredEmployees: Employee[] = [];
     if (event === "") {
-      this.employeesToDisplay = this.employees;
+      this.employeesToDisplay = this.employeesDisplay();
     } else {
+      this.setSearching = true;
       filteredEmployees = this.employees.filter((val, index) => {
         let targetKey =
-          val.firstname.toLowerCase() + "" + val.lastname.toLocaleLowerCase();
+          val.firstname.toLowerCase() + " " + val.lastname.toLocaleLowerCase();
         let searchKey = event.toLowerCase();
         return targetKey.includes(searchKey);
       });
       this.employeesToDisplay = filteredEmployees;
     }
+  }
+
+  changePage(newPage: any): void {
+    this.currentPage = newPage;
+    this.employeesToDisplay = this.employeesDisplay();
+  }
+
+  employeesDisplay() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.employees.slice(startIndex, endIndex);
+  }
+
+  downloadEmployeesPdf() {
+    this.employeeService.generatePDFData(this.employees);
+  }
+
+  downloadEmployeesExcel() {
+    this.employeeService.generateExcelData(this.employees);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.employees.length / this.itemsPerPage);
   }
 
   public get FirstName(): FormControl {
