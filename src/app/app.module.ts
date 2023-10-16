@@ -6,9 +6,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EmployeeComponent } from './employee/employee.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 @NgModule({
-  declarations: [AppComponent, EmployeeComponent],
+  declarations: [AppComponent, EmployeeComponent, PaginationComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,50 +1,53 @@
-<section>
-  <div class="employee-details">
-    <div class="employee-details__profile">
-      <img
-        class="employee-details__profile__image"
-        src="{{ employee.profile }}"
-        alt="Profile Image"
-      />
-    </div>
-    <div class="employee-details__info">
-      <div class="employee-details__info__header">
-        <div class="employee-details__info__header__name">
-          {{ employee.firstname | titlecase }} 
-          {{ employee.lastname | titlecase }}
+<table class="table align-middle mb-0 bg-white main__table">
+  <thead class="bg-light main__table__head">
+    <tr>
+      <th>Name</th>
+      <th>Birthdate</th>
+      <th>Gender</th>
+      <th>Education</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employeesToDisplay">
+      <td class="employee__table__name-data">
+        <div class="d-flex align-items-center">
+          <img
+            src="{{ employee.profile }}"
+            class="rounded-circle"
+            alt=""
+            style="width: 45px; height: 45px"
+          />
+          <p class="fw-bold mb-1 employee__table__name">
+            {{ employee.firstname }} {{ employee.lastname }}
+          </p>
         </div>
-        <div class="employee-details__info__header__buttons">
-          <button class="employee-details__info__header__buttons__edit" (click)="editEmployeeClicked()">
+      </td>
+      <td>
+        <p class="fw-bold mb-1">{{ employee.birthdate }}</p>
+      </td>
+      <td>
+        <p class="fw-bold mb-1">
+          {{ employee.gender === "m" ? "Male" : "Female" }}
+        </p>
+      </td>
+      <td>{{ employee.education | titlecase }}</td>
+      <td class="employee__table__name-data">
+        <div class="employee__table__buttons">
+          <button
+            class="employee__table__buttons__edit"
+            (click)="editEmployeeClicked(employee)"
+          >
             Edit
           </button>
-          <button (click)="deleteEmployeeClicked()" class="employee-details__info__header__buttons__delete">
+          <button
+            (click)="deleteEmployeeClicked(employee)"
+            class="employee__table__buttons__delete"
+          >
             Delete
           </button>
         </div>
-      </div>
-      <div class="employee-details__info__personal-info">
-        <table class="employee-details__info__personal-info__table">
-          <thead class="employee-details__info__personal-info__table__head">
-            <tr>
-              <td>Personal Details</td>
-            </tr>
-          </thead>
-          <tbody class="employee-details__info__personal-info__table__body">
-            <tr>
-              <td>Birthdate</td>
-              <td>{{ employee.birthdate }}</td>
-            </tr>
-            <tr>
-              <td>Gender</td>
-              <td>{{ employee.gender === "m" ? "Male" : "Female" }}</td>
-            </tr>
-            <tr>
-              <td>Education</td>
-              <td>{{ employee.education | titlecase }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
+      </td>
+    </tr>
+  </tbody>
+</table>

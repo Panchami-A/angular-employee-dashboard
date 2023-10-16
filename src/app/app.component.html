@@ -1,64 +1,78 @@
 <style></style>
-
-<div class="toolbar">
-  <div class="sidebar-opener">
-    <i
-      class="fa fa-bars fa-lg sidebar-opener__icon"
-      (click)="sidebarShow = !sidebarShow"
-    ></i>
-    <h2 class="sidebar-opener__text">Welcome !</h2>
-  </div>
+<h2 class="main-header__text">SDE Employee Dashboard</h2>
+<div class="header">
+  <h3 class="header__text">Employee Details</h3>
   <div class="search-employee">
     <input
       type="search"
       class="search-employee__input"
       placeholder="Search Employee"
-      (input) = "searchEmployees(searchInput.value)"
+      (input)="searchEmployees(searchInput.value)"
       #searchInput
     />
+    <span class="fa fa-search search-employee__icon"></span>
   </div>
-  <div class="sidebar-slider" [class.sidebar-slide-in]="sidebarShow" #sideBar>
-    <div class="sidebar-close" (click)="sidebarShow = !sidebarShow">X</div>
-    <div class="sidebar-content">
-      <ul>
-        <li
-          type="button"
-          class="add-employee__button"
-          data-toggle="modal"
-          data-target="#exampleModal"
-          (click)="sidebarShow = false"
-          #addEmployeeButton
-        >
-          Add Employee
-        </li>
-        <li
-          type="button"
-          class="download-details__button"
-          (click)="sidebarShow = !sidebarShow"
-        >
-          Download Records (PDF Format)
-        </li>
-        <li
-          type="button"
-          class="download-details__button"
-          (click)="sidebarShow = !sidebarShow"
-        >
-          Download Records (Excel Format)
-        </li>
-      </ul>
-    </div>
+</div>
+<div class="sidebar">
+  <div class="sidebar__header">
+    <img
+      src="../assets/images/sde.png"
+      width="100px"
+      height="90px"
+      class="sidebar__header__logo"
+    />
+    <p class="sidebar__header__text">SDE GROUPS</p>
   </div>
+  <div class="sidebar__content">
+    <i class="fa fa-plus sidebar__content__add-icon"></i>
+    <p
+      class="sidebar__content__text"
+      data-toggle="modal"
+      data-target="#exampleModal"
+      #addEmployeeButton
+    >
+      Add Employee
+    </p>
+  </div>
+</div>
+
+<div class="download-buttons">
+  <button type="button" class="download-buttons__pdf" title="Export As PDF" (click)="downloadEmployeesPdf()">
+    <i class="fa fa-file-pdf-o download-buttons__pdf__icon"></i>
+  </button>
+  <button type="button" class="download-buttons__excel" title="Export As Excel" (click)="downloadEmployeesExcel()">
+    <i class="fa fa-file-excel-o download-buttons__excel__icon"></i>
+  </button>
 </div>
 
 <!-- Employee Details -->
 <main class="main">
-  <div class="main__no-employees-text" *ngIf="employees.length === 0">There are No Employees Added!</div>
-  <div *ngFor="let emp of employeesToDisplay">
+  <p class="main__no-employees-text" *ngIf="employeesToDisplay.length === 0">
+    No Records Found!
+  </p>
+  <div
+    *ngIf="employees.length > 0 && employeesToDisplay.length > 0"
+    class="main__employees-table"
+  >
     <app-employee
-      [employee]="emp"
+      [employeesToDisplay]="employeesToDisplay"
       (onRemoveEmployee)="removeEmployee($event)"
       (onEditEmployee)="editEmployee($event)"
-    ></app-employee>
+    />
+  </div>
+  <div *ngIf="employees.length >= 6 && !setSearching">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
+  </div>
+  <div *ngIf="employeesToDisplay.length >= 6 && setSearching">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="changePage($event)"
+    ></app-pagination>
   </div>
 </main>
 
@@ -75,18 +89,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Enter Employee Information
-        </h5>
+        <h5 class="modal-title">Enter Employee Information</h5>
         <button
           type="button"
-          class="close"
+          class="fa fa-close close"
           data-dismiss="modal"
           aria-label="Close"
           (click)="closeModal()"
-        >
-          X
-        </button>
+        ></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="employeeForm">
@@ -183,7 +193,7 @@
       <div class="modal-footer">
         <button
           type="button"
-          class="btn btn-primary"
+          class="modal-button"
           data-dismiss="modal"
           (click)="addEmployee()"
         >
