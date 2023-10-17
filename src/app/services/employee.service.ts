@@ -12,7 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   providedIn: "root",
 })
 export class EmployeeService {
-  baseUrl = "https://localhost:3000/api/posts";
+  baseUrl = "http://localhost:3000/api/posts";
   logoImage: string = "";
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
