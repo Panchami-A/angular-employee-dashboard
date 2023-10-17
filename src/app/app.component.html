@@ -23,24 +23,32 @@
     />
     <p class="sidebar__header__text">SDE GROUPS</p>
   </div>
-  <div class="sidebar__content">
+  <div
+    class="sidebar__content"
+    data-toggle="modal"
+    data-target="#exampleModal"
+    #addEmployeeButton
+  >
     <i class="fa fa-plus sidebar__content__add-icon"></i>
-    <p
-      class="sidebar__content__text"
-      data-toggle="modal"
-      data-target="#exampleModal"
-      #addEmployeeButton
-    >
-      Add Employee
-    </p>
+    <p class="sidebar__content__text">Add Employee</p>
   </div>
 </div>
 
 <div class="download-buttons">
-  <button type="button" class="download-buttons__pdf" title="Export As PDF" (click)="downloadEmployeesPdf()">
+  <button
+    type="button"
+    class="download-buttons__pdf"
+    title="Export As PDF"
+    (click)="downloadEmployeesPdf()"
+  >
     <i class="fa fa-file-pdf-o download-buttons__pdf__icon"></i>
   </button>
-  <button type="button" class="download-buttons__excel" title="Export As Excel" (click)="downloadEmployeesExcel()">
+  <button
+    type="button"
+    class="download-buttons__excel"
+    title="Export As Excel"
+    (click)="downloadEmployeesExcel()"
+  >
     <i class="fa fa-file-excel-o download-buttons__excel__icon"></i>
   </button>
 </div>
@@ -61,13 +69,6 @@
     />
   </div>
   <div *ngIf="employees.length >= 6 && !setSearching">
-    <app-pagination
-      [currentPage]="currentPage"
-      [totalPages]="totalPages"
-      (pageChange)="changePage($event)"
-    ></app-pagination>
-  </div>
-  <div *ngIf="employeesToDisplay.length >= 6 && setSearching">
     <app-pagination
       [currentPage]="currentPage"
       [totalPages]="totalPages"
@@ -100,6 +101,18 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="employeeForm">
+          <div class="modal-body__id">
+            <label for="id" class="form-label modal-body__id__label"
+              >Employee Id</label
+            >
+            <input
+              type="text"
+              class="form-control modal-body__id__input"
+              placeholder="Employee Id"
+              formControlName="id"
+              [readOnly]="editData"
+            />
+          </div>
           <div class="modal-body__personal-info">
             <h6 class="modal-body__personal-info__text">
               Personal Information
@@ -131,6 +144,9 @@
                 class="form-control"
                 id="datepicker"
                 formControlName="birthday"
+                min="1950-01-01"
+                [max]="today"
+                value="1950-01-01"
               />
             </div>
             <div class="modal-body__personal-info__details__gender">
@@ -159,6 +175,17 @@
                   />
                   <label class="form-check-label" for="female">Female</label>
                 </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="gender"
+                    id="female"
+                    value="o"
+                    formControlName="gender"
+                  />
+                  <label class="form-check-label" for="female">Other</label>
+                </div>
               </div>
             </div>
           </div>
@@ -168,7 +195,7 @@
               class="form-control modal-body__eduction__select"
               formControlName="education"
             >
-              <option value="default" selected>Enter your Education</option>
+              <option value="default" selected>Choose Education</option>
               <option
                 *ngFor="let option of educationOptions; let i = index"
                 value="{{ i }}"

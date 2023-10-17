@@ -1,5 +1,60 @@
 {
-  "posts": [],
+  "posts": [
+    {
+      "id": "1",
+      "firstname": "John ",
+      "lastname": "Deo",
+      "birthdate": "1950-01-28",
+      "gender": "m",
+      "education": "Bachelor's degree",
+      "profile": "../assets/images/blank-image.jpg"
+    },
+    {
+      "id": "2",
+      "firstname": "Jane",
+      "lastname": "K",
+      "birthdate": "1960-06-07",
+      "gender": "f",
+      "education": "Diploma",
+      "profile": "../assets/images/blank-image.jpg"
+    },
+    {
+      "id": "3",
+      "firstname": "Jimmy",
+      "lastname": "J",
+      "birthdate": "1970-01-01",
+      "gender": "m",
+      "education": "Master's degree",
+      "profile": "../assets/images/blank-image.jpg"
+    },
+    {
+      "id": "4",
+      "firstname": "Joseph",
+      "lastname": "K",
+      "birthdate": "1972-10-24",
+      "gender": "m",
+      "education": "Bachelor's degree",
+      "profile": "../assets/images/blank-image.jpg"
+    },
+    {
+      "id": "5",
+      "firstname": "James",
+      "lastname": "H",
+      "birthdate": "1979-10-01",
+      "gender": "m",
+      "education": "Bachelor's degree",
+      "profile": "../assets/images/blank-image.jpg"
+    },
+    {
+      "id": "7",
+      "firstname": "Alice",
+      "lastname": "P",
+      "birthdate": "1950-01-01",
+      "gender": "m",
+      "education": "Secondary education",
+      "profile": "../assets/images/blank-image.jpg"
+    }
+  ],
   "comments": [],
   "profile": {
     "name": "typicode"

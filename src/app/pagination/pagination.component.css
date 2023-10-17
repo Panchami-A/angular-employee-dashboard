@@ -10,15 +10,13 @@
   font-size: 18px;
   padding: 5px 13px;
   background-color: white;
-  color: #7e28ed;
-  border: solid 1px #7e28ed !important;
+  color: #68459b;
+  border: solid 1px #68459b !important;
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
 }
 
-.pagination > li > a:focus,
-.pagination > li > span:focus,
 .pagination > li > span:hover {
   color: white;
   background-color: #a29bfe;
@@ -28,14 +26,8 @@
 
 .pagination > .active > a {
   color: white;
-  background-color: #7e28ed !important;
-  border: solid 1px #7e28ed !important;
-  border-radius: 5px;
-}
-
-.pagination > .active > a:hover {
-  background-color: #5a4181 !important;
-  border: solid 1px #5a4181;
+  background-color: #68459b !important;
+  border: solid 1px #68459b !important;
   border-radius: 5px;
 }
 

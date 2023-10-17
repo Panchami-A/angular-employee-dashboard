@@ -12,7 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   providedIn: "root",
 })
 export class EmployeeService {
-  baseUrl = "http://localhost:3000/api/posts";
+  baseUrl = "https://localhost:3000/api/posts";
   logoImage: string = "";
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -42,7 +42,6 @@ export class EmployeeService {
         const reader = new FileReader();
         reader.onload = () => {
           this.logoImage = reader.result as string;
-          console.log(this.logoImage);
         };
         reader.readAsDataURL(blob);
       })

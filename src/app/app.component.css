@@ -23,7 +23,7 @@ main {
   flex-direction: row;
   margin-top: 20px;
   justify-content: space-between;
-  background-color: #a69bda;
+  background-color: #68459b;
 }
 
 .header__text {
@@ -73,15 +73,17 @@ main {
 .sidebar {
   height: 100%;
   width: 12%;
-  position: absolute;
+  position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #7e28ed;
+  bottom: 0;
+  background-color: #3f2860;
   transition: 0.5s;
   padding-top: 60px;
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
+  overflow-y: auto;
 }
 
 .sidebar a {
@@ -147,7 +149,7 @@ main {
 }
 
 .download-buttons__pdf {
-  background-color: #7e28ed;
+  background-color: #68459b;
   border-radius: 30px;
   border: none;
   width: 40px;
@@ -155,16 +157,30 @@ main {
 }
 
 .download-buttons__excel {
-  background-color: #7e28ed;
+  background-color: #68459b;
   border-radius: 30px;
   border: none;
   width: 40px;
   height: 40px;
 }
 
-.download-buttons__excel__icon, .download-buttons__pdf__icon{
+.download-buttons__excel__icon,
+.download-buttons__pdf__icon {
   font-size: 22px;
   color: white;
+}
+
+.modal-body__id {
+  margin-right: 50px;
+  margin-bottom: 20px;
+}
+
+.modal-body__id__input {
+  margin-left: 28px;
+}
+
+.modal-body__id__label {
+  margin-left: 18px;
 }
 
 .modal-body__name {
@@ -187,21 +203,18 @@ main {
 
 .modal-body__personal-info__details__datepicker {
   width: 40%;
-  margin-left: -50px;
-}
-
-.modal-body__personal-info__details__gender {
-  margin-left: -100px;
+  margin-left: 20px;
 }
 
 .modal-body__personal-info__details {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .modal-body__eduction {
   margin: 10px;
+  margin-right: 35px;
 }
 
 .modal-body__eduction__select {
@@ -216,18 +229,20 @@ main {
   margin: 10px;
   display: flex;
   flex-direction: column;
+  margin-right: 35px;
 }
 
 .modal-body__profile-image__input {
   height: fit-content;
   margin-left: 10px;
+  margin-right: 50px;
 }
 
 input[type="file"]::file-selector-button {
   border: none;
   padding: 0.2em 0.4em;
   border-radius: 0.2em;
-  background-color: #7e28ed;
+  background-color: #68459b;
   color: white;
 }
 
@@ -248,11 +263,23 @@ input[type="file"]::file-selector-button:hover {
   width: 20%;
   height: 40px;
   color: white;
-  background-color: #7e28ed;
+  background-color: #68459b;
   border: none;
   border-radius: 10px;
 }
 
 .modal-button:hover {
   background-color: #a29bfe;
+}
+
+#datepicker::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 50;
+  transform: scaleX(-1);
+  top: 10px;
+  width: 28%;
+  margin-top: 195px;
+  padding: 20px;
+  cursor: pointer;
+  border: none;
 }

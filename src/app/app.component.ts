@@ -7,6 +7,7 @@ import {
 } from "@angular/forms";
 import { Employee } from "./model/employee.model";
 import { EmployeeService } from "./services/employee.service";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-root",
@@ -27,16 +28,20 @@ export class AppComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 5;
   setSearching = false;
+  today: string | null;
+  fallbackImageURL = "../assets/images/blank-image.jpg";
 
   constructor(
     private fb: FormBuilder,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private datePipe: DatePipe
   ) {
     this.actionButton = "Insert";
     this.employeeForm = fb.group({});
     this.employees = [];
     this.employeesToDisplay = [];
     this.outdatedEmployeeDetail = {
+      id: 0,
       firstname: "",
       lastname: "",
       birthdate: "",
@@ -44,26 +49,28 @@ export class AppComponent implements OnInit {
       education: "",
       profile: "",
     };
+    this.today = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   }
 
   educationOptions = [
-    "10th pass",
-    "diploma",
-    "graduate",
-    "post graduate",
-    "PhD",
+    "Secondary education",
+    "Diploma",
+    "Bachelor's degree",
+    "Master's degree",
+    "Doctorate or higher",
   ];
 
   ngOnInit(): void {
     this.actionButton = "Insert";
     this.editData = false;
     this.employeeForm = this.fb.group({
+      id: [0, Validators.required],
       firstname: ["", Validators.required],
       lastname: ["", Validators.required],
-      birthday: ["", Validators.required],
+      birthday: ["1950-01-01", Validators.required],
       gender: ["m", Validators.required],
       education: ["default", Validators.required],
-      profile: ["", Validators.required],
+      profile: [""],
     });
 
     this.employeeService.getEmployees().subscribe((res) => {
@@ -90,6 +97,7 @@ export class AppComponent implements OnInit {
 
   updateEmployee() {
     let updatedEmployeeDetail: Employee = {
+      id: this.outdatedEmployeeDetail.id,
       firstname: this.FirstName.value,
       lastname: this.LastName.value,
       birthdate: this.BirthDay.value,
@@ -99,12 +107,11 @@ export class AppComponent implements OnInit {
         this.imageUrl.length > 0
           ? this.imageUrl
           : this.outdatedEmployeeDetail.profile,
-      id: this.outdatedEmployeeDetail.id,
     };
     this.employeeService
       .putProduct(
         updatedEmployeeDetail,
-        this.outdatedEmployeeDetail.id?.toString() ?? "0"
+        updatedEmployeeDetail.id?.toString() ?? "0"
       )
       .subscribe((res) => {
         let index = this.employees.indexOf(this.outdatedEmployeeDetail);
@@ -116,22 +123,33 @@ export class AppComponent implements OnInit {
 
   addEmployee() {
     if (!this.editData) {
-      if (this.employeeForm.valid) {
-        let employee: Employee = {
-          firstname: this.FirstName.value,
-          lastname: this.LastName.value,
-          birthdate: this.BirthDay.value,
-          gender: this.Gender.value,
-          education: this.educationOptions[parseInt(this.Education.value)],
-          profile: this.imageUrl,
-        };
-        this.employeeService.postEmployee(employee).subscribe((res) => {
-          this.employees.unshift(res);
-          this.employeesToDisplay = this.employeesDisplay();
-          this.clearForm();
-        });
+      const newEmployeeId = this.Id.value;
+      const employeeExists = this.employees.some(
+        (employee) => employee.id === newEmployeeId
+      );
+      if (employeeExists) {
+        alert(
+          "Employee with this ID already exists. Please use a different ID."
+        );
       } else {
-        alert("Please provide all the details");
+        if (this.employeeForm.valid) {
+          let employee: Employee = {
+            id: this.Id.value,
+            firstname: this.FirstName.value,
+            lastname: this.LastName.value,
+            birthdate: this.BirthDay.value,
+            gender: this.Gender.value,
+            education: this.educationOptions[parseInt(this.Education.value)],
+            profile: this.imageUrl ? this.imageUrl : this.fallbackImageURL,
+          };
+          this.employeeService.postEmployee(employee).subscribe((res) => {
+            this.employees.unshift(res);
+            this.employeesToDisplay = this.employeesDisplay();
+            this.clearForm();
+          });
+        } else {
+          alert("Please provide all the details");
+        }
       }
     } else {
       this.updateEmployee();
@@ -140,7 +158,7 @@ export class AppComponent implements OnInit {
 
   removeEmployee(event: any) {
     this.employees.forEach((val, index) => {
-      if (val.id === parseInt(event)) {
+      if (parseInt((val.id ?? "")?.toString()) === parseInt(event)) {
         this.employeeService.deleteEmployee(event).subscribe((res) => {
           this.currentPage = 1;
           this.employees.splice(index, 1);
@@ -152,6 +170,8 @@ export class AppComponent implements OnInit {
 
   setForm(emp: Employee) {
     this.actionButton = "Edit";
+    console.log(emp);
+    this.Id.setValue(emp.id);
     this.FirstName.setValue(emp.firstname);
     this.LastName.setValue(emp.lastname);
     this.BirthDay.setValue(emp.birthdate);
@@ -167,8 +187,14 @@ export class AppComponent implements OnInit {
   }
 
   editEmployee(event: any) {
+    console.log("click confirmed", event);
     this.employees.forEach((val, index) => {
-      if (val.id === parseInt(event)) {
+      console.log(
+        "click confirmed",
+        parseInt(event),
+        parseInt((val.id ?? "")?.toString())
+      );
+      if (parseInt((val.id ?? "")?.toString()) === parseInt(event)) {
         this.setForm(val);
         this.outdatedEmployeeDetail = val;
       }
@@ -180,10 +206,11 @@ export class AppComponent implements OnInit {
   clearForm() {
     this.actionButton = "Insert";
     this.editData = false;
+    this.Id.setValue(0);
     this.FirstName.setValue("");
     this.LastName.setValue("");
-    this.BirthDay.setValue("");
-    this.Gender.setValue("");
+    this.BirthDay.setValue("1950-01-01");
+    this.Gender.setValue("m");
     this.Education.setValue("");
     this.fileInput.nativeElement.value = "";
     this.setSearching = false;
@@ -216,6 +243,12 @@ export class AppComponent implements OnInit {
     return this.employees.slice(startIndex, endIndex);
   }
 
+  filteredEmployeesDisplay(filteredEmployees: Employee[]) {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return filteredEmployees.slice(startIndex, endIndex);
+  }
+
   downloadEmployeesPdf() {
     this.employeeService.generatePDFData(this.employees);
   }
@@ -228,6 +261,9 @@ export class AppComponent implements OnInit {
     return Math.ceil(this.employees.length / this.itemsPerPage);
   }
 
+  public get Id(): FormControl {
+    return this.employeeForm.get("id") as FormControl;
+  }
   public get FirstName(): FormControl {
     return this.employeeForm.get("firstname") as FormControl;
   }
