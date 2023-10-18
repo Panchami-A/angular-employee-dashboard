@@ -12,7 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   providedIn: "root",
 })
 export class EmployeeService {
-  baseUrl = "http://localhost:3000/api/posts";
+  baseUrl = "https://server-repo-delta.vercel.app/api/posts";
   logoImage: string = "";
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -122,8 +122,17 @@ export class EmployeeService {
       "Birthdate",
       "Gender",
       "Education",
-      "Profile Image",
+      // "Profile Image",
     ]);
+
+    // Set column widths
+    worksheet.columns = [
+      { width: 15 },
+      { width: 15 },
+      { width: 15 },
+      { width: 15 },
+      { width: 20 },
+    ];
 
     // Add employee data to the worksheet
     employees.forEach((employee) => {
@@ -135,22 +144,23 @@ export class EmployeeService {
         this.toTitleCase(employee.education),
       ]);
       row.height = 50;
+
       row.alignment = {
         vertical: "middle",
       };
-      // Insert the profile image
-      const lastRow = worksheet.lastRow;
-      if (employee.profile) {
-        const imageId = workbook.addImage({
-          base64: employee.profile,
-          extension: "png", // Change the file extension to match the image type
-        });
+      //   // Insert the profile image
+      //   const lastRow = worksheet.lastRow;
+      //   if (employee.profile) {
+      //     const imageId = workbook.addImage({
+      //       base64: employee.profile,
+      //       extension: "png", // Change the file extension to match the image type
+      //     });
 
-        worksheet.addImage(imageId, {
-          tl: { col: 5, row: lastRow ? lastRow.number - 1 : 0 }, // Specify the cell where the image should be inserted
-          ext: { width: 50, height: 100 }, // Adjust the width and height as needed
-        });
-      }
+      //     worksheet.addImage(imageId, {
+      //       tl: { col: 5, row: lastRow ? lastRow.number - 1 : 0 }, // Specify the cell where the image should be inserted
+      //       ext: { width: 50, height: 100 }, // Adjust the width and height as needed
+      //     });
+      // }
     });
 
     // Save the workbook to a file
