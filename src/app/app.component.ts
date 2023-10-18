@@ -214,11 +214,13 @@ export class AppComponent implements OnInit {
     this.Education.setValue("");
     this.fileInput.nativeElement.value = "";
     this.setSearching = false;
+    this.imageUrl = "";
   }
 
   searchEmployees(event: any) {
     let filteredEmployees: Employee[] = [];
     if (event === "") {
+      this.setSearching = false;
       this.employeesToDisplay = this.employeesDisplay();
     } else {
       this.setSearching = true;
