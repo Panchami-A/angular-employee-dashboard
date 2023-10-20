@@ -14,9 +14,11 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class EmployeeService {
   baseUrl = "https://server-repo-delta.vercel.app/api/posts";
   logoImage: string = "";
+  fallBackImage: string = "";
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
     this.loadLogoImage();
+    this.loadFallBackImage();
   }
 
   getEmployees() {
@@ -42,6 +44,21 @@ export class EmployeeService {
         const reader = new FileReader();
         reader.onload = () => {
           this.logoImage = reader.result as string;
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch((error) => {
+        console.error("Error loading logo image:", error);
+      });
+  }
+
+  loadFallBackImage() {
+    fetch("assets/images/blank-image.jpg") // Update the path to your image
+      .then((response) => response.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.fallBackImage = reader.result as string;
         };
         reader.readAsDataURL(blob);
       })
@@ -89,7 +106,10 @@ export class EmployeeService {
                   alignment: "center",
                 },
                 {
-                  image: employee.profile,
+                  image:
+                    employee.profile === "../assets/images/blank-image.jpg"
+                      ? this.fallBackImage
+                      : employee.profile,
                   width: 50,
                   height: 50,
                   alignment: "center",
@@ -148,22 +168,7 @@ export class EmployeeService {
       row.alignment = {
         vertical: "middle",
       };
-      //   // Insert the profile image
-      //   const lastRow = worksheet.lastRow;
-      //   if (employee.profile) {
-      //     const imageId = workbook.addImage({
-      //       base64: employee.profile,
-      //       extension: "png", // Change the file extension to match the image type
-      //     });
-
-      //     worksheet.addImage(imageId, {
-      //       tl: { col: 5, row: lastRow ? lastRow.number - 1 : 0 }, // Specify the cell where the image should be inserted
-      //       ext: { width: 50, height: 100 }, // Adjust the width and height as needed
-      //     });
-      // }
     });
-
-    // Save the workbook to a file
     workbook.xlsx.writeBuffer().then((buffer: BlobPart) => {
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

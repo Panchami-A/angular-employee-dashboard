@@ -8,6 +8,7 @@ import {
 import { Employee } from "./model/employee.model";
 import { EmployeeService } from "./services/employee.service";
 import { DatePipe } from "@angular/common";
+import { CustomValidators } from "./custom-validations";
 
 @Component({
   selector: "app-root",
@@ -17,6 +18,7 @@ import { DatePipe } from "@angular/common";
 export class AppComponent implements OnInit {
   @ViewChild("fileInput") fileInput: any;
   @ViewChild("addEmployeeButton") addEmployeeButton: any;
+  @ViewChild("modal") modal: any;
   employees: Employee[];
   employeesToDisplay: Employee[];
   employeeForm: FormGroup;
@@ -41,7 +43,7 @@ export class AppComponent implements OnInit {
     this.employees = [];
     this.employeesToDisplay = [];
     this.outdatedEmployeeDetail = {
-      id: 0,
+      id: NaN,
       firstname: "",
       lastname: "",
       birthdate: "",
@@ -64,13 +66,33 @@ export class AppComponent implements OnInit {
     this.actionButton = "Insert";
     this.editData = false;
     this.employeeForm = this.fb.group({
-      id: [0, Validators.required],
-      firstname: ["", Validators.required],
-      lastname: ["", Validators.required],
-      birthday: ["1950-01-01", Validators.required],
+      id: [null, [Validators.required]],
+      firstname: [
+        null,
+        [
+          Validators.required,
+          CustomValidators.nameValidator,
+          CustomValidators.containsNumberOrSpecialChars,
+        ],
+      ],
+      lastname: [
+        null,
+        [
+          Validators.required,
+          CustomValidators.lastNameValidator,
+          CustomValidators.containsNumberOrSpecialChars,
+        ],
+      ],
+      birthday: [
+        "1950-01-01",
+        [Validators.required, CustomValidators.birthdateValidator],
+      ],
       gender: ["m", Validators.required],
-      education: ["default", Validators.required],
-      profile: [""],
+      education: [
+        "default",
+        [Validators.required, CustomValidators.educationValidator],
+      ],
+      profile: ["", CustomValidators.fileExtension(["png", "jpg", "jpeg"])],
     });
 
     this.employeeService.getEmployees().subscribe((res) => {
@@ -79,10 +101,26 @@ export class AppComponent implements OnInit {
       }
       this.employeesToDisplay = this.employeesDisplay();
     });
+    this.setValidatorsForIdField();
+  }
+
+  setValidatorsForIdField() {
+    const idControl = this.Id;
+    idControl.clearValidators();
+    if (this.actionButton === "Insert") {
+      idControl.setValidators([
+        Validators.required,
+        CustomValidators.idValidator(this.employees),
+      ]);
+    } else if (this.actionButton === "Edit") {
+      idControl.setValidators([Validators.required]);
+    }
+    idControl.updateValueAndValidity();
   }
 
   closeModal() {
     this.clearForm();
+    this.setValidatorsForIdField();
   }
 
   onselectFile(e: any) {
@@ -117,8 +155,8 @@ export class AppComponent implements OnInit {
         let index = this.employees.indexOf(this.outdatedEmployeeDetail);
         this.employees[index] = res as Employee;
         this.employeesToDisplay = this.employeesDisplay();
+        this.closeModal();
       });
-    this.clearForm();
   }
 
   addEmployee() {
@@ -145,10 +183,9 @@ export class AppComponent implements OnInit {
           this.employeeService.postEmployee(employee).subscribe((res) => {
             this.employees.unshift(res);
             this.employeesToDisplay = this.employeesDisplay();
+            this.closeModal();
             this.clearForm();
           });
-        } else {
-          alert("Please provide all the details");
         }
       }
     } else {
@@ -158,7 +195,10 @@ export class AppComponent implements OnInit {
 
   removeEmployee(event: any) {
     this.employees.forEach((val, index) => {
-      if (parseInt((val.id ?? "")?.toString()) === parseInt(event)) {
+      if (
+        parseInt((val.id ?? "")?.toString()) === parseInt(event) ||
+        val.id === event
+      ) {
         this.employeeService.deleteEmployee(event).subscribe((res) => {
           this.currentPage = 1;
           this.employees.splice(index, 1);
@@ -170,7 +210,6 @@ export class AppComponent implements OnInit {
 
   setForm(emp: Employee) {
     this.actionButton = "Edit";
-    console.log(emp);
     this.Id.setValue(emp.id);
     this.FirstName.setValue(emp.firstname);
     this.LastName.setValue(emp.lastname);
@@ -187,31 +226,29 @@ export class AppComponent implements OnInit {
   }
 
   editEmployee(event: any) {
-    console.log("click confirmed", event);
     this.employees.forEach((val, index) => {
-      console.log(
-        "click confirmed",
-        parseInt(event),
-        parseInt((val.id ?? "")?.toString())
-      );
-      if (parseInt((val.id ?? "")?.toString()) === parseInt(event)) {
+      if (
+        parseInt((val.id ?? "")?.toString()) === parseInt(event) ||
+        val.id === event
+      ) {
         this.setForm(val);
         this.outdatedEmployeeDetail = val;
       }
     });
     this.addEmployeeButton.nativeElement.click();
     this.editData = true;
+    this.setValidatorsForIdField();
   }
 
   clearForm() {
     this.actionButton = "Insert";
     this.editData = false;
-    this.Id.setValue(0);
-    this.FirstName.setValue("");
-    this.LastName.setValue("");
+    this.Id.setValue(null);
+    this.FirstName.setValue(null);
+    this.LastName.setValue(null);
     this.BirthDay.setValue("1950-01-01");
     this.Gender.setValue("m");
-    this.Education.setValue("");
+    this.Education.setValue("default");
     this.fileInput.nativeElement.value = "";
     this.setSearching = false;
     this.imageUrl = "";
@@ -280,5 +317,8 @@ export class AppComponent implements OnInit {
   }
   public get Education(): FormControl {
     return this.employeeForm.get("education") as FormControl;
+  }
+  public get Profile(): FormControl {
+    return this.employeeForm.get("profile") as FormControl;
   }
 }

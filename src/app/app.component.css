@@ -172,15 +172,15 @@ main {
 
 .modal-body__id {
   margin-right: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .modal-body__id__input {
-  margin-left: 28px;
+  margin-left: 23px;
 }
 
 .modal-body__id__label {
-  margin-left: 18px;
+  margin-left: 20px;
 }
 
 .modal-body__name {
@@ -202,8 +202,23 @@ main {
 }
 
 .modal-body__personal-info__details__datepicker {
+  display: inline-block;
+  position: relative;
   width: 40%;
   margin-left: 20px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }
 
 .modal-body__personal-info__details {
@@ -220,7 +235,7 @@ main {
 .modal-body__eduction__select {
   width: 100%;
   height: 40px;
-  margin: 10px;
+  margin: 10px 10px 0px 15px;
   margin-top: 0px;
   appearance: none;
 }
@@ -234,7 +249,7 @@ main {
 
 .modal-body__profile-image__input {
   height: fit-content;
-  margin-left: 10px;
+  margin-left: 15px;
   margin-right: 50px;
 }
 
@@ -272,14 +287,36 @@ input[type="file"]::file-selector-button:hover {
   background-color: #a29bfe;
 }
 
-#datepicker::-webkit-calendar-picker-indicator {
-  position: absolute;
-  left: 50;
-  transform: scaleX(-1);
-  top: 10px;
-  width: 28%;
-  margin-top: 195px;
-  padding: 20px;
-  cursor: pointer;
-  border: none;
+.modal-button:disabled {
+  background-color: #a29bfe;
+}
+
+.modal-body__personal-info__details__input {
+  margin-left: 5px;
+}
+
+.modal-body__name__first-name__input {
+  margin-left: 5px;
+}
+
+.error-message {
+  font-size: small;
+  margin-top: 5px;
+  margin-left: 5px;
+  color: red;
+}
+
+.modal-body__id__input__error-message {
+  font-size: small;
+  margin-top: 5px;
+  margin-left: 20px;
+  color: red;
+}
+
+.modal-body__eduction__label {
+  margin-left: 10px;
+}
+
+.modal-body__profile-image__label {
+  margin-left: 10px;
 }

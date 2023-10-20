@@ -18,7 +18,6 @@ export class EmployeeComponent implements OnInit {
     this.onRemoveEmployee.emit(employee.id);
   }
   editEmployeeClicked(employee: Employee) {
-    console.log("hiii", employee.id);
     this.onEditEmployee.emit(employee.id);
   }
   getMonthName(monthNumber: string | null): string {
